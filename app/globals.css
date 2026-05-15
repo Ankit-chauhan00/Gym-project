@@ -68,9 +68,8 @@
      BACKGROUND IMAGES
   ======================================== */
 
-  --background-image-hero-dark: url("/images/gym-dark.jpg");
+  --background-image-hero: url("/images/hero-home.png");
 
-  --background-image-hero-light: url("/images/gym-light.jpg");
 
   /* ========================================
      fonts

@@ -3,9 +3,10 @@ import "./globals.css";
 import ThemeProvider from "@/context/Theme";
 import { Geist } from "next/font/google";
 import { cn } from "@/lib/utils";
-import NavBar from "@/components/navigation/navbar";
+import { SessionProvider } from "next-auth/react";
+import AuthProvider from "@/context/AuthProvider";
 
-const geist = Geist({subsets:['latin'],variable:'--font-sans'});
+const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
 
 const iceland = localFont({
   src: "../public/fonts/iceland.ttf",
@@ -39,13 +40,22 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={cn("h-full", "antialiased", iceland.variable, frans.variable, asap.variable, "font-sans", geist.variable)}
+      className={cn(
+        "h-full",
+        "antialiased",
+        iceland.variable,
+        frans.variable,
+        asap.variable,
+        "font-sans",
+        geist.variable
+      )}
     >
       <body className="flex min-h-full flex-col">
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-          <NavBar/>
-          {children}
+        <AuthProvider>
+          <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+            {children}
           </ThemeProvider>
+        </AuthProvider>
       </body>
     </html>
   );
