@@ -1,42 +1,39 @@
-import React from 'react'
-import { Button } from '../ui/button'
-import Image from 'next/image'
+import React from "react";
+import { Button } from "../ui/button";
+import Image from "next/image";
+import { signIn } from "next-auth/react";
+import ROUTES from "@/constants/routes";
 
 const SocialAuthForm = () => {
-  return (
-    <div className="mt-10 flex flex-wrap gap-2.5">
-        <Button className='bg-red-600 text-light px-2 py-5'>
-            <Image
-            src="/icons/apple.svg"
-            height={20}
-            width={20}
-            alt='apple logo'
-            className='invert-colors mr-2 object-contain'
-            />
-            <span>Log in With Apple</span>
-        </Button>
-        <Button className='bg-white gap-2 px-2 py-5'>
-            <Image
-            src="/icons/google.svg"
-            height={20}
-            width={20}
-            alt='google logo'
-            className='invert-colors mr-2.5 object-contain'
-            />
-            <span>Log in With Apple</span>
-        </Button>
-        <Button className='bg-white gap-2 px-2 py-5'>
-            <Image
-            src="/icons/github.png"
-            height={20}
-            width={20}
-            alt='githublogo'
-            className='invert-colors mr-2.5 object-contain'
-            />
-            <span>Log in With Apple</span>
-        </Button>
-    </div>
-  )
-}
+  const handleSocilaAuthForm = async (provider: "github" | "google") => {
+    try {
+      await signIn(provider, {
+        callbackUrl: ROUTES.HOME,
+        redirect: false,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-export default SocialAuthForm
+  return (
+    <div className="mt-6 flex w-full flex-col flex-wrap gap-2 sm:mt-10 sm:flex-row sm:gap-2.5">
+      <Button
+        onClick={() => handleSocilaAuthForm("google")}
+        className="flex-1 gap-2 border border-gray-300 bg-white px-3 py-2 text-black transition-colors hover:bg-gray-100 sm:flex-none sm:px-4 sm:py-3 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:hover:bg-gray-700"
+      >
+        <Image src="/icons/google.svg" height={20} width={20} alt="google logo" className="object-contain" />
+        <span className="text-sm font-medium sm:text-base">Google</span>
+      </Button>
+      <Button
+        onClick={() => handleSocilaAuthForm("github")}
+        className="flex-1 gap-2 border border-gray-300 bg-white px-3 py-2 text-black transition-colors hover:bg-gray-100 sm:flex-none sm:px-4 sm:py-3 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:hover:bg-gray-700"
+      >
+        <Image src="/icons/github.png" height={20} width={20} alt="github logo" className="object-contain" />
+        <span className="text-sm font-medium sm:text-base">GitHub</span>
+      </Button>
+    </div>
+  );
+};
+
+export default SocialAuthForm;

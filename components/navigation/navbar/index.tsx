@@ -27,8 +27,12 @@ const NavBar = () => {
         <div className="pr-5">
           <Theme />
         </div>
+        <Link href="/sign-in">
         <Button className="font-asap hidden text-sm sm:flex h-[1.8rem] dark:text-white w-[5.5rem] border-[1px] border-white bg-transparent">Sign In</Button>
-        <Button className="font-asap hidden text-sm sm:flex h-[1.8rem] dark:bg-[#CE1919] dark:border-none dark:text-white w-[5.5rem] border-[1px] border-white bg-[#1D1F23]">Join Now</Button>
+        </Link>
+        <Link href="/sign-up">
+         <Button className="font-asap hidden text-sm sm:flex h-[1.8rem] dark:bg-[#CE1919] dark:border-none dark:text-white w-[5.5rem] border-[1px] border-white bg-[#1D1F23]">Join Now</Button>
+        </Link>
       </div>
     </nav>
   );

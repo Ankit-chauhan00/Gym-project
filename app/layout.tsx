@@ -3,8 +3,10 @@ import "./globals.css";
 import ThemeProvider from "@/context/Theme";
 import { Geist } from "next/font/google";
 import { cn } from "@/lib/utils";
-import { SessionProvider } from "next-auth/react";
 import AuthProvider from "@/context/AuthProvider";
+import { auth } from "@/auth";
+import { Toaster } from "sonner";
+
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -31,11 +33,13 @@ export const metadata = {
   description: "Live Healthy and make Environment Healthy",
 };
 
-export default function RootLayout({
+export  default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
+  const session = await auth();
   return (
     <html
       lang="en"
@@ -51,9 +55,10 @@ export default function RootLayout({
       )}
     >
       <body className="flex min-h-full flex-col">
-        <AuthProvider>
+        <AuthProvider session={session}>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
             {children}
+            <Toaster/>
           </ThemeProvider>
         </AuthProvider>
       </body>
