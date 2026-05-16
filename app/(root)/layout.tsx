@@ -6,7 +6,7 @@ const RootLayout = ({ children }: { children: ReactNode }) => {
     <main className="">
       <NavBar/>
 
-      <section className="min-h-screen flex-1 bg-hero object-cover">
+      <section className="min-h-screen flex-1  object-cover">
         {children}
       </section>
     </main>

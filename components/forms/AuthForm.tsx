@@ -18,7 +18,7 @@ interface AuthFormProps<T extends FieldValues> {
 
 const AuthForm = <T extends FieldValues>({ schema, formType, onSubmit, defaultValues }: AuthFormProps<T>) => {
   const form = useForm<T>({
-    resolver: zodResolver(schema),
+    resolver: zodResolver(schema) as any,
     defaultValues: defaultValues as DefaultValues<T>,
   });
 
@@ -38,7 +38,7 @@ const AuthForm = <T extends FieldValues>({ schema, formType, onSubmit, defaultVa
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form id="form-rhf-demo" onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4 sm:space-y-6">
+        <form id="form-rhf-demo" onSubmit={form.handleSubmit(()=>handleSubmit)} className="space-y-4 sm:space-y-6">
           {Object.keys(defaultValues).map((fieldName) => (
             <FieldGroup key={fieldName}>
               <Controller
