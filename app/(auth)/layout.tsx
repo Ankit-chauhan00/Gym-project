@@ -1,5 +1,6 @@
 "use client";
 import SocialAuthForm from "@/components/forms/SocialAuthForm";
+import Theme from "@/components/navigation/navbar/Theme";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
@@ -23,6 +24,9 @@ const AuthLayout = ({ children }: { children: ReactNode }) => {
         </Link>
 
         <div className="font-frans flex items-center gap-2">
+          <div className="mr-3">
+            <Theme/>
+          </div>
           <p className="text-xs text-black sm:text-base dark:text-white">
             {isSignIn ? "Don't have an account?" : "Already have an account?"}
           </p>

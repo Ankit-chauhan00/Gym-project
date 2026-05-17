@@ -17,7 +17,7 @@ const NavBar = () => {
 
       <div className="font-iceland flex-between hidden gap-10 text-2xl text-white sm:flex">
         <Link href="/">Home</Link>
-        <Link href="/about">About</Link>
+        <Link href="/memberships">Memberships</Link>
         <Link href="/programs">Programs</Link>
         <Link href="/trainers">Trainers</Link>
         <Link href="/pricing">Pricing</Link>

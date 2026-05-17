@@ -70,7 +70,6 @@
 
   --background-image-hero: url("/images/hero-home.png");
 
-
   /* ========================================
      fonts
   ======================================== */
@@ -141,7 +140,7 @@
 }
 
 @utility container-width {
-  @apply max-w-7xl mx-auto px-4 md:px-6 lg:px-8;
+  @apply mx-auto max-w-7xl px-4 md:px-6 lg:px-8;
 }
 
 @utility smooth-transition {
@@ -149,28 +148,14 @@
 }
 
 @utility btn-primary {
-  @apply bg-primary-500
-  hover:bg-red-600
-  text-white
-  px-6 py-3
-  rounded-xl
-  font-semibold
-  smooth-transition;
+  @apply bg-primary-500 smooth-transition rounded-xl px-6 py-3 font-semibold text-white hover:bg-red-600;
 }
 
 @utility btn-secondary {
-  @apply border border-white/10
-  bg-white/5
-  hover:bg-white/10
-  text-white
-  px-6 py-3
-  rounded-xl
-  backdrop-blur-md
-  smooth-transition;
+  @apply smooth-transition rounded-xl border border-white/10 bg-white/5 px-6 py-3 text-white backdrop-blur-md hover:bg-white/10;
 }
 
 @theme inline {
-
   --font-heading: var(--font-sans);
 
   --font-sans: var(--font-sans);
@@ -253,7 +238,6 @@
 }
 
 :root {
-
   --background: oklch(1 0 0);
 
   --foreground: oklch(0.145 0 0);
@@ -320,7 +304,6 @@
 }
 
 .dark {
-
   --background: oklch(0.145 0 0);
 
   --foreground: oklch(0.985 0 0);
@@ -393,5 +376,16 @@
   }
   html {
     @apply font-sans;
+  }
+}
+
+@layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
   }
 }
