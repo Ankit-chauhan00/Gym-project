@@ -1,0 +1,1 @@
+type ErrorResponse = ActionResponse<undefined> & {success: false};

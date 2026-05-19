@@ -1,18 +1,24 @@
+"use client";
+
 import React from "react";
 import { Button } from "../ui/button";
 import Image from "next/image";
-import { signIn } from "next-auth/react";
+
 import ROUTES from "@/constants/routes";
+import { signIn } from "next-auth/react";
+import { toast } from "sonner";
+
 
 const SocialAuthForm = () => {
+
   const handleSocilaAuthForm = async (provider: "github" | "google") => {
     try {
       await signIn(provider, {
         callbackUrl: ROUTES.HOME,
-        redirect: false,
+        redirect: true,
       });
     } catch (error) {
-      console.log(error);
+      toast.error("Sign in failed")
     }
   };
 
