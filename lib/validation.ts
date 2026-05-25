@@ -1,16 +1,18 @@
 import z from "zod";
 
-
 export const SigninWithOAuthSchema = z.object({
   provider: z.enum(["github", "google"]),
-  providerAccountId: z.string().min(1, {message: "Provider Account Required"}),
+  providerAccountId: z.string().min(1, { message: "Provider Account Required" }),
   user: z.object({
-     name: z.string().min(1, "Name is required"),
+    name: z.string().min(1, "Name is required"),
     username: z.string().min(3, "Username must be at least 3 characters"),
-    email: z.email("Invalid email address"),
+    email: z
+      .string()
+      .email("Invalid email address")
+      .transform((value) => value.trim().toLowerCase()),
     image: z.url("Invalid image URL").optional(),
-  })
-})
+  }),
+});
 
 export const SignUpSchema = z.object({
   username: z
@@ -29,17 +31,25 @@ export const SignUpSchema = z.object({
       message: "Name can only contain letters and spaces.",
     }),
 
-  email: z.email({ message: "Please provide a Valid email address." }).min(1, { message: "Email is Required" }),
+  email: z
+    .string()
+    .email({ message: "Please provide a valid email address." })
+    .min(1, { message: "Email is required." })
+    .transform((value) => value.trim().toLowerCase()),
 
   //we can make password strong later in production
   password: z.string(),
 });
 
 export const SignInSchema = z.object({
-  email: z.email({ message: 'Please provide a valid email address.' }).min(1, { message: 'Email is required.' }),
+  email: z
+    .string()
+    .email({ message: "Please provide a valid email address." })
+    .min(1, { message: "Email is required." })
+    .transform((value) => value.trim().toLowerCase()),
 
   password: z
     .string()
-    .min(6, { message: 'Password must be at least 6 characters long.' })
-    .max(100, { message: 'Password cannot exceed 100 characters.' }),
+    .min(6, { message: "Password must be at least 6 characters long." })
+    .max(100, { message: "Password cannot exceed 100 characters." }),
 });

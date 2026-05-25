@@ -3,6 +3,7 @@ import prisma from "@/lib/prisma";
 import { SigninWithOAuthSchema } from "@/lib/validation";
 import { NextResponse } from "next/server";
 import z from "zod";
+import slugify from "slugify";
 
 export async function POST(request: Request) {
   const { provider, user, providerAccountId } = await request.json();
@@ -17,41 +18,54 @@ export async function POST(request: Request) {
     throw new ValidationError(flattenError);
   }
 
+  const { name, username, email, image } = user;
+  const normalizedEmail = email.trim().toLowerCase();
+
+  const slugifiedUsername = slugify(username, {
+    lower: true,
+    strict: true,
+    trim: true,
+  });
+
   await prisma.$transaction(async (tx) => {
-    const existingUser = await tx.user.findUnique({
+    // STEP 1 → Check existing account
+    const existingAccount = await tx.account.findUnique({
       where: {
-        email: user.email!,
+        provider_providerAccountId: {
+          provider,
+          providerAccountId,
+        },
+      },
+    });
+
+    if (existingAccount) return;
+
+    let existingUser = await tx.user.findUnique({
+      where: {
+        email: normalizedEmail,
       },
     });
 
     if (!existingUser) {
-      await tx.user.create({
+      existingUser = await tx.user.create({
         data: {
-          email: user.email!,
-          name: user.name,
-          imageUrl: user.image,
-          username: user.email!.split("@")[0],
+          name,
+          email: normalizedEmail,
+          image,
+          username: `${slugifiedUsername}_${Math.floor(Math.random() * 10000)}`,
         },
       });
-    } else {
-      const updatedData: {
-        name?: string;
-        imageUrl?: string;
-      } = {};
-
-      if (user.name && existingUser.name !== user.name) updatedData.name = user.name;
-      if (user.image && existingUser.imageUrl != user.image) updatedData.imageUrl = user.image;
-
-      if(Object.keys(updatedData).length > 0){
-        await tx.user.update({
-            where:{
-            id: existingUser.id,
-            },
-            data: updatedData,
-        });
-      }
     }
+
+    //Step-4 create linked Account
+    await tx.account.create({
+      data: {
+        provider,
+        providerAccountId,
+        userId: existingUser.id,
+      },
+    });
   });
 
-  return NextResponse.json({success: true});
+  return NextResponse.json({ success: true });
 }

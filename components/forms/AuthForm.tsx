@@ -35,6 +35,7 @@ const AuthForm = <T extends FieldValues>({ schema, formType, onSubmit, defaultVa
       toast("Success",{
         description: formType === "SIGN_IN" ? "Signed in Successfully": "Signed up Successfully"
       })
+      router.refresh();
       router.push(ROUTES.HOME);
     }else{
       toast.error(result?.error?.message || `Error ${result?.status}` )

@@ -11,23 +11,4 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
-enum Role {
-  USER
-  ADMIN
-  TRAINER
-}
 
-model User {
-  id        String     @id @default(cuid())
-  name      String
-  username  String   @unique
-  email     String   @unique
-  password  String?
-
-  role      Role     @default(USER)
-
-  imageUrl  String?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}

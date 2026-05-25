@@ -1,0 +1,29 @@
+enum Role {
+  USER
+  ADMIN
+  TRAINER
+}
+
+model User {
+  id           String    @id @default(cuid())
+
+  // Profile
+  name         String?
+  username     String?   @unique
+  email        String    @unique
+  image        String?
+
+  // Authorization
+  role         Role      @default(USER)
+
+  // Credentials Auth
+  password     String?   // nullable for OAuth users
+
+  // Relations
+  accounts     Account[]
+
+  // Timestamps
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+

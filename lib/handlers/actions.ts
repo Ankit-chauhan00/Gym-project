@@ -14,14 +14,10 @@ type ActionOptions<T> = {
   authorize?: boolean;
 };
 
-async function action<T>({
-  params,
-  schema,
-  authorize = false,
-}: ActionOptions<T>) {
+async function action<T>({ params, schema, authorize = false }: ActionOptions<T>) {
   if (schema && params) {
     try {
-      schema.parse(params);
+      params = schema.parse(params);
     } catch (error) {
       if (error instanceof ZodError) {
         const treeError = z.treeifyError(error);
