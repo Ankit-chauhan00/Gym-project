@@ -69,3 +69,14 @@ export const PaginatedSearchParamsSchema = z.object({
   filter: z.string().optional(),
   sort: z.string().optional(),
 });
+
+export const TrainerSchema = z.object({
+  email: z.email().min(1,{message: "Email is required"}),
+  username: z.string().min(5,{message: "min 5 length username is required"}),
+  specialization: z.string().optional(),
+  phone: z.string().optional(),
+  experience: z.string().optional(),
+  image: z.string().optional(),
+  password: z.string()
+})
+

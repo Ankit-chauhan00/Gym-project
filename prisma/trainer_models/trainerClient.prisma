@@ -1,0 +1,22 @@
+enum Status {
+  ACTIVE
+  INACTIVE
+}
+
+model TrainerClient {
+  id String @id @default(cuid())
+
+  trainerId String
+  trainer   Trainer @relation(fields: [trainerId], references: [id], onDelete: Cascade)
+
+  userId String
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  ptStatus Status @default(INACTIVE)
+
+  joinedAt DateTime @default(now())
+  expireAt DateTime
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

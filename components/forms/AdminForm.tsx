@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable react-hooks/immutability */
 "use client";
 import * as React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -10,14 +12,15 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import ImageUpload from "../shared/ImageUpload";
 import Image from "next/image";
+import { ActionResponse } from "@/types/action";
 
-interface AuthFormProps<T extends FieldValues> {
+interface AdminFormProps<T extends FieldValues> {
   schema: z.ZodType<T>;
   defaultValues: T;
   onSubmit: (data: T) => Promise<{ success: boolean }>;
 }
 
-const AdminForm = <T extends FieldValues>({ schema, onSubmit, defaultValues }: AuthFormProps<T>) => {
+const AdminForm = <T extends FieldValues>({ schema, onSubmit, defaultValues }: AdminFormProps<T>) => {
   const [imageUrl, setImageUrl] = React.useState("");
 
   const form = useForm<T>({

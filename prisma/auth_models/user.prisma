@@ -4,8 +4,6 @@ enum Role {
   TRAINER
 }
 
-
-
 model User {
   id           String    @id @default(cuid())
 
@@ -19,13 +17,16 @@ model User {
   role         Role      @default(USER)
 
   // Credentials Auth
-  password     String?   // nullable for OAuth users
+  password     String?
 
   // Relations
   accounts     Account[]
+
+  trainerProfile Trainer?
+
+  trainerConnections TrainerClient[]
 
   // Timestamps
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
 }
-

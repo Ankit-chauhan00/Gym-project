@@ -3,12 +3,11 @@
 import { ErrorResponse, PaginatedSearchParams } from "@/types/global";
 import action from "../handlers/actions";
 import handleError from "../handlers/error";
-import { AdminFormschema, PaginatedSearchParamsSchema } from "../validation";
+import { AdminFormschema, PaginatedSearchParamsSchema, TrainerSchema } from "../validation";
 import prisma from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import { auth } from "@/auth";
-import { User } from "@/generated/prisma/client";
-import { ActionResponse, AdminCreationParams } from "@/types/action";
+import { ActionResponse, AdminCreationParams, CreateTrainerParams, SafeUser } from "@/types/action";
 
 export async function CreateAdmin(params: AdminCreationParams): Promise<ActionResponse> {
   const session = await auth();
@@ -69,8 +68,6 @@ export async function CreateAdmin(params: AdminCreationParams): Promise<ActionRe
     return handleError(error) as ErrorResponse;
   }
 }
-
-type SafeUser = Omit<User, "password">;
 
 export async function getUsers(
   params: PaginatedSearchParams
@@ -193,4 +190,80 @@ export async function DeleteUser(userId: string) {
   } catch (error) {
     return handleError(error) as ErrorResponse;
   }
+}
+
+export async function CreateTrainer(params: CreateTrainerParams): Promise<ActionResponse> {
+  const session = await auth();
+  if (!session || session.user.role !== "ADMIN") {
+    return handleError(new Error("Unauthorized")) as ErrorResponse;
+  }
+  const validationResult = await action({
+    params,
+    schema: TrainerSchema,
+    authorize: true,
+  });
+
+  if (validationResult instanceof Error) return handleError(validationResult) as ErrorResponse;
+
+  const { email, username, specialization, phone, experience, image, password } = validationResult.params!;
+  const hashedpassword = await bcrypt.hash(password, 12);
+
+  const existingUser = await prisma.user.findUnique({
+    where: {
+      email,
+    },
+    include: {
+      trainerProfile: true,
+    },
+  });
+
+  // User has alredy a trainer profile
+  if (existingUser?.trainerProfile) {
+    throw new Error("Trainer alredy exists");
+  }
+
+  // if user exists create Trainer profile
+  if (existingUser) {
+    await prisma.user.update({
+      where: {
+        id: existingUser.id,
+      },
+      data: {
+        role: "TRAINER",
+        ...(image && { image }),
+        ...(password && { password: hashedpassword }),
+
+        trainerProfile: {
+          create: {
+            specialization,
+            phone,
+            experience,
+          },
+        },
+      },
+    });
+
+    return { success: true };
+  }
+
+  // otherwise create both trainer + user
+  await prisma.user.create({
+    data: {
+      email,
+      username,
+      image,
+      password: hashedpassword,
+      role: "TRAINER",
+
+      trainerProfile: {
+        create: {
+          specialization,
+          phone,
+          experience,
+        },
+      },
+    },
+  });
+
+  return { success: true };
 }

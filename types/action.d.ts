@@ -10,6 +10,8 @@ interface SignInWithAuthParams {
     image: string;
   };
 }
+
+type SafeUser = Omit<User, "password">;
 interface ActionResponse<T = null> {
   success: boolean;
   data?: T;
@@ -36,3 +38,13 @@ interface AdminCreationParams {
 }
 
 export type SafeUser = Omit<User, "password">;
+
+interface CreateTrainerParams {
+  email: string;
+  username: string;
+  specialization?: string;
+  phone?: string;
+  experience?:string;
+  image?:string;
+  password: string;
+}

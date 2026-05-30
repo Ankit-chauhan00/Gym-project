@@ -1,0 +1,18 @@
+model Trainer {
+  id String @id @default(cuid())
+
+  userId String @unique
+  user User @relation(fields: [userId],references: [id],onDelete: Cascade)
+
+  specialization String?
+  experience String?
+
+  phone String?
+  isVerified Boolean @default(false)
+
+  // Relation
+  trainerClient  TrainerClient[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
