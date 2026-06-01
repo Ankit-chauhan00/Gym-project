@@ -3,7 +3,7 @@ model MembershipPlans {
 
     name         String   @unique
 
-    desctiption  String?
+    description  String?
 
     price        Float
 

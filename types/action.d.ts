@@ -48,3 +48,12 @@ interface CreateTrainerParams {
   image?:string;
   password: string;
 }
+
+interface MembershipParams {
+  membershipName: string;
+  description?: string;
+  membershipPrice: number;
+  membershipDuration: number;
+  image?: string;
+  isActive: boolean;
+}

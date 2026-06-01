@@ -3,11 +3,11 @@
 import { ErrorResponse, PaginatedSearchParams } from "@/types/global";
 import action from "../handlers/actions";
 import handleError from "../handlers/error";
-import { AdminFormschema, PaginatedSearchParamsSchema, TrainerSchema } from "../validation";
+import { AdminFormschema, CreateMembershipSchema, PaginatedSearchParamsSchema, TrainerSchema } from "../validation";
 import prisma from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import { auth } from "@/auth";
-import { ActionResponse, AdminCreationParams, CreateTrainerParams, SafeUser } from "@/types/action";
+import { ActionResponse, AdminCreationParams, CreateTrainerParams, MembershipParams, SafeUser } from "@/types/action";
 
 export async function CreateAdmin(params: AdminCreationParams): Promise<ActionResponse> {
   const session = await auth();
@@ -266,4 +266,37 @@ export async function CreateTrainer(params: CreateTrainerParams): Promise<Action
   });
 
   return { success: true };
+}
+
+export async function createMembership(params: MembershipParams): Promise<ActionResponse> {
+  const session = await auth();
+  if (!session || session.user.role !== "ADMIN") {
+    return handleError(new Error("Unauthorized")) as ErrorResponse;
+  }
+
+  const validationResult = await action({
+    params,
+    schema: CreateMembershipSchema,
+    authorize: true,
+  });
+
+  if (validationResult instanceof Error) return handleError(validationResult) as ErrorResponse;
+
+  const { membershipName, membershipPrice, membershipDuration, isActive, description } = validationResult.params!;
+
+  try {
+    await prisma.membershipPlans.create({
+      data: {
+        name: membershipName,
+        description,
+        price: membershipPrice,
+        durationDays: membershipDuration,
+        isActive,
+      },
+    });
+
+    return { success: true };
+  } catch (error) {
+    return handleError(error) as ErrorResponse;
+  }
 }

@@ -32,7 +32,6 @@ export const SignUpSchema = z.object({
     }),
 
   email: z
-    .string()
     .email({ message: "Please provide a valid email address." })
     .min(1, { message: "Email is required." })
     .transform((value) => value.trim().toLowerCase()),
@@ -43,7 +42,6 @@ export const SignUpSchema = z.object({
 
 export const SignInSchema = z.object({
   email: z
-    .string()
     .email({ message: "Please provide a valid email address." })
     .min(1, { message: "Email is required." })
     .transform((value) => value.trim().toLowerCase()),
@@ -78,5 +76,13 @@ export const TrainerSchema = z.object({
   experience: z.string().optional(),
   image: z.string().optional(),
   password: z.string()
+})
+
+export const CreateMembershipSchema = z.object({
+  membershipName: z.string().min(1,{message: "Membership name is Required"}),
+  description: z.string().optional(),
+  membershipPrice: z.number(),
+  membershipDuration: z.number().int(),
+  isActive: z.boolean().default(true),
 })
 

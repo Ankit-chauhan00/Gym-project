@@ -10,6 +10,7 @@ import { SafeUser } from "@/types/action";
 
 // we haev to delete use and their associated  account
 
+
 interface SearchParams {
   searchParams: {
     page?: string;
@@ -23,7 +24,7 @@ const DeleteUser = async ({ searchParams }: SearchParams) => {
   const { page, pageSize, query, filter } = await searchParams;
   const { success, data, error } = await getUsers({
     page: Number(page) || 1,
-    pageSize: Number(pageSize) || 3,
+    pageSize: Number(pageSize) || 20,
     query: query || "",
     filter: filter || "",
   });
