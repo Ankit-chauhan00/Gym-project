@@ -97,7 +97,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           account.provider === "github" ? (profile?.login as string) : (user.name?.toLocaleLowerCase() as string),
       };
 
-      const { success } = (await api.auth.aAuthSignIn({
+      const { success } = (await api.auth.oAuthSignIn({
         user: userInfo,
         provider: account.provider as "github" | "google",
         providerAccountId: account.providerAccountId,
