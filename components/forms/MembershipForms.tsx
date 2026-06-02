@@ -1,7 +1,7 @@
 "use client";
 import { ActionResponse } from "@/types/action";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Controller, DefaultValues, FieldValues, Path, SubmitHandler, useForm } from "react-hook-form";
+import { Controller, DefaultValues,  FieldValues, Path, SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
 import { Button } from "../ui/button";
@@ -20,7 +20,8 @@ interface MembershipProps<T extends FieldValues> {
 
 const MembershipForms = <T extends FieldValues>({ schema, defaultValues, onSubmit }: MembershipProps<T>) => {
   const form = useForm<T>({
-    resolver: zodResolver(schema) as any,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    resolver: zodResolver(schema as any),
     defaultValues: defaultValues as DefaultValues<T>,
   });
 

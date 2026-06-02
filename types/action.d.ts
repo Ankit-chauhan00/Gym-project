@@ -57,3 +57,10 @@ interface MembershipParams {
   image?: string;
   isActive: boolean;
 }
+
+interface CreateProductParams {
+  title: string;
+  description: string;
+  price : number;
+  stock: number;
+}

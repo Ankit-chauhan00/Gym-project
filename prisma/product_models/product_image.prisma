@@ -1,0 +1,8 @@
+model ProductImages {
+    id           String     @id @default(cuid())
+    imageUrl     String    
+    productId    String
+    product      Product    @relation(fields: [productId], references: [id],  onDelete: Cascade)
+
+    createdAt    DateTime   @default(now())
+}

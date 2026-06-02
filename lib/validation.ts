@@ -86,3 +86,9 @@ export const CreateMembershipSchema = z.object({
   isActive: z.boolean().default(true),
 })
 
+export const productCreationSchema = z.object({
+  title : z.string().min(1, {message: "Title is Required"}),
+  description: z.string().min(1,{message: "Description is Required"}),
+  price : z.number(),
+  stock: z.number().int(),
+})

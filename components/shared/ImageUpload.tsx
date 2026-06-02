@@ -57,6 +57,11 @@ const ImageUpload = ({ onUpload }: Props) => {
       }
 
       onUpload(res.url);
+      
+      // clear selected file name
+      if(fileInputRef.current){
+        fileInputRef.current.value = ""
+      }
 
       setProgress(100);
 

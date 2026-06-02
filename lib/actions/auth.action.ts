@@ -1,6 +1,6 @@
 "use server";
 
-import { User } from "@/generated/prisma/client";
+
 import action from "../handlers/actions";
 import handleError from "../handlers/error";
 import { SignInSchema, SignUpSchema } from "../validation";
@@ -8,6 +8,9 @@ import prisma from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import { signIn } from "@/auth";
 import { NotFoundError } from "../http-errors";
+import { ActionResponse, AuthCredentials } from "@/types/action";
+import { ErrorResponse } from "@/types/global";
+import { User } from "@prisma/client";
 
 export async function signUpWithCredentials(params: AuthCredentials): Promise<ActionResponse<User>> {
   const validationResult = await action({ params, schema: SignUpSchema });

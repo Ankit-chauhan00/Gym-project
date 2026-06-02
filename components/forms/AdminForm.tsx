@@ -3,7 +3,7 @@
 "use client";
 import * as React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Controller, DefaultValues, FieldValues, Path, SubmitHandler, useForm } from "react-hook-form";
+import {  DefaultValues, FieldValues, Path, SubmitHandler, useForm } from "react-hook-form"
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -13,6 +13,7 @@ import { toast } from "sonner";
 import ImageUpload from "../shared/ImageUpload";
 import Image from "next/image";
 import { ActionResponse } from "@/types/action";
+import { Controller } from "react-hook-form";
 
 interface AdminFormProps<T extends FieldValues> {
   schema: z.ZodType<T>;
@@ -24,7 +25,7 @@ const AdminForm = <T extends FieldValues>({ schema, onSubmit, defaultValues }: A
   const [imageUrl, setImageUrl] = React.useState("");
 
   const form = useForm<T>({
-    resolver: zodResolver(schema) as any,
+    resolver: zodResolver(schema as any) ,
     defaultValues: defaultValues as DefaultValues<T>,
   });
 
@@ -126,6 +127,7 @@ const AdminForm = <T extends FieldValues>({ schema, onSubmit, defaultValues }: A
             Create Admin
           </Button>
         </Field>
+        
       </CardFooter>
     </Card>
   );

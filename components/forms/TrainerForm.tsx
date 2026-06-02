@@ -23,7 +23,8 @@ const TrainerForm = <T extends FieldValues>({ schema, defaultValues, onSubmit }:
   const [imageUrl, setImageUrl] = React.useState("");
 
   const form = useForm<T>({
-    resolver: zodResolver(schema) as any,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    resolver: zodResolver(schema as any) ,
     defaultValues: defaultValues as DefaultValues<T>,
   });
 

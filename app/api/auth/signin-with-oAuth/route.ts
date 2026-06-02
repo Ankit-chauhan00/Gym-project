@@ -1,3 +1,5 @@
+export const runtime = "nodejs";
+
 import { ValidationError } from "@/lib/http-errors";
 import prisma from "@/lib/prisma";
 import { SigninWithOAuthSchema } from "@/lib/validation";

@@ -21,6 +21,7 @@ model User {
 
   // Relations
   accounts     Account[]
+  products     Product[]
 
   trainerProfile Trainer?
 
