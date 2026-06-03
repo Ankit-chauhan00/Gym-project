@@ -1,10 +1,11 @@
+
 {
   "name": "gym-project",
   "version": "0.1.0",
   "private": true,
   "type": "module",
   "prisma": {
-    "seed": "tsx seeding/admin.ts"
+    "seed": "tsx prisma/seedTrainers.ts"
   },
   "scripts": {
     "dev": "next dev",
@@ -14,6 +15,7 @@
     "postinstall": "npx prisma generate"
   },
   "dependencies": {
+    "@faker-js/faker": "^10.4.0",
     "@hookform/resolvers": "^5.2.2",
     "@imagekit/next": "^2.1.5",
     "@prisma/adapter-pg": "^7.8.0",
