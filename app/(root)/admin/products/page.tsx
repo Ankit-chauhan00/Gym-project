@@ -1,6 +1,6 @@
 "use client";
 import ProductForm from '@/components/forms/ProductForm'
-import { CreateProduct } from '@/lib/actions/product.action'
+import { CreateProduct } from '@/lib/actions/product.action';
 import { productCreationSchema } from '@/lib/validation'
 
 const ProductsPage = () => {

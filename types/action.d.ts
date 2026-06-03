@@ -63,4 +63,6 @@ interface CreateProductParams {
   description: string;
   price : number;
   stock: number;
+  images?: string[];
+  modelUrl?: string;
 }

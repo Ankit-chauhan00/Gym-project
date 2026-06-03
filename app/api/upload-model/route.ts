@@ -44,6 +44,8 @@ export async function POST(req: Request) {
         .end(buffer);
     });
 
+    console.log(result.secure_url);
+
     return NextResponse.json({
       url: result.secure_url,
     });

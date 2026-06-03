@@ -5,6 +5,7 @@ import { useRef, useState } from "react";
 
 interface Props {
   onUpload: (url: string) => void;
+  multiple?: boolean 
 }
 
 const ImageUpload = ({ onUpload }: Props) => {

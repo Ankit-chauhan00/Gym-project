@@ -91,4 +91,10 @@ export const productCreationSchema = z.object({
   description: z.string().min(1,{message: "Description is Required"}),
   price : z.number(),
   stock: z.number().int(),
+
+  images: z.array(z.string()).optional(),
+
+  modelUrl : z.string().optional(),
 })
+
+

@@ -30,7 +30,7 @@ interface PaginatedSearchParams {
   sort?: string;
 }
 
-interface CreateMemberships{
+interface CreateMemberships {
   name: string;
   description?: string;
   price: number;
@@ -38,4 +38,6 @@ interface CreateMemberships{
   image: string;
 }
 
-
+type SerializedProduct = Omit<Product, "price"> & {
+  price: number;
+};

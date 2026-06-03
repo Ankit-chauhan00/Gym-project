@@ -4,18 +4,19 @@ import { useState } from "react";
 import { Controller, DefaultValues, FieldValues, Path, SubmitHandler, useForm } from "react-hook-form";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
-import z, { maxSize } from "zod";
+import z from "zod";
 import { Input } from "../ui/input";
 import ImageUpload from "../shared/ImageUpload";
 import { Button } from "../ui/button";
 import Image from "next/image";
 import { ActionResponse } from "@/types/action";
 import { toast } from "sonner";
+import { SerializedProduct } from "@/types/global";
 
 interface ProductFromProps<T extends FieldValues> {
   schema: z.ZodType<T>;
   defaultValues: T;
-  onSubmit: Promise<{ success: boolean }>;
+  onSubmit: (data: T) => Promise<ActionResponse<SerializedProduct>>
 }
 
 const ProductForm = <T extends FieldValues>({ schema, defaultValues, onSubmit }: ProductFromProps<T>) => {
@@ -41,7 +42,7 @@ const ProductForm = <T extends FieldValues>({ schema, defaultValues, onSubmit }:
       modelUrl,
     };
 
-    const result = (await onSubmit(formData as T)) as ActionResponse;
+    const result = await onSubmit(formData as T);
 
     if (result?.success) {
       toast.success("Product Added Success Fully");
@@ -115,6 +116,15 @@ const ProductForm = <T extends FieldValues>({ schema, defaultValues, onSubmit }:
                       }
                       autoComplete="off"
                       className="border border-gray-300 bg-gray-50 text-black dark:border-gray-700 dark:bg-gray-900 dark:text-white"
+                      onChange={(e) => {
+                        const value = e.target.value;
+
+                        if (["price", "stock"].includes(field.name)) {
+                          field.onChange(value === "" ? "" : Number(value));
+                        } else {
+                          field.onChange(value);
+                        }
+                      }}
                     />
 
                     {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
@@ -173,8 +183,8 @@ const ProductForm = <T extends FieldValues>({ schema, defaultValues, onSubmit }:
                 });
 
                 if (!res.ok) {
-                  toast.error("Request failed to upload")
-                  e.target.value = ""
+                  toast.error("Request failed to upload");
+                  e.target.value = "";
                 }
 
                 const data = await res.json();

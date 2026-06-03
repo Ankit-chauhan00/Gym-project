@@ -6,22 +6,22 @@ import { PrismaClient } from "@prisma/client";
 
 const DATABASE_URL = process.env.DATABASE_URL!;
 
-declare global {
-  var prisma: PrismaClient | undefined;
-}
+const globalForPrisma = globalThis as unknown as {
+  prisma: PrismaClient;
+};
 
 const adapter = new PrismaPg({
   connectionString: DATABASE_URL,
 });
 
 const prisma =
-  global.prisma ||
+  globalForPrisma.prisma ||
   new PrismaClient({
     adapter,
   });
 
 if (process.env.NODE_ENV !== "production") {
-  global.prisma = prisma;
+  globalForPrisma.prisma = prisma;
 }
 
 export default prisma;
