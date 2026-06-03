@@ -11,6 +11,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { DeleteUser } from "@/lib/actions/admin.action";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 interface Props {
@@ -18,9 +19,11 @@ interface Props {
 }
 
 const UserDelete = ({ userId }: Props) => {
+  const router = useRouter();
   const handleDelete = async () => {
     await DeleteUser(userId);
     toast.success("User deleted successfully");
+    router.refresh();
   };
 
   return (

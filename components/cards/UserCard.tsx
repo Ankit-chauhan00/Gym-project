@@ -3,7 +3,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { SafeUser } from "@/types/action";
 import { User } from "@prisma/client";
-import { useRouter } from "next/navigation";
 import UserDelete from "../deletionComponets/UserDelete";
 
 interface UserCardProps {
@@ -24,8 +23,6 @@ const UserCard = ({ user: { name, image, username, email, role, createdAt, id } 
     .slice(0, 2)
     .map((word) => word[0]?.toUpperCase())
     .join("");
-
-  const router = useRouter();
 
   return (
     <>
