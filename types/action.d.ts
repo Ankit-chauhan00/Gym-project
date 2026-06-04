@@ -66,3 +66,7 @@ interface CreateProductParams {
   images?: string[];
   modelUrl?: string;
 }
+
+interface GetTrainerParams{
+  trainerId: string;
+}

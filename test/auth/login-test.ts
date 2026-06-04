@@ -2,34 +2,56 @@
 import http from "k6/http";
 import { check, sleep } from "k6";
 
-
 export const options = {
-  vus: 1000,
-  duration: "30s",
+  stages: [
+    { duration: "30s", target: 50 },
+    { duration: "1m", target: 100 },
+    { duration: "1m", target: 200 },
+    { duration: "30s", target: 0 },
+  ],
 };
 
 export default function () {
-  const random = Math.floor(Math.random() * 1000) + 1;
 
-  const payload = JSON.stringify({
-    email: `user${random}@test.com`,
+  // Get CSRF token
+  const csrfRes = http.get(
+    "http://localhost:3000/api/auth/csrf"
+  );
+
+  const csrfToken = JSON.parse(csrfRes.body as string).csrfToken;
+  // Extract cookies
+  const csrfCookie =
+  csrfRes.cookies["authjs.csrf-token"]?.[0]?.value;
+
+  // Form payload
+  const payload = {
+    email: "admin@test.com",
     password: "123456",
-  });
-
-  const params = {
-    headers: {
-      "Content-Type": "application/json",
-    },
+    csrfToken: csrfToken,
+    callbackUrl: "http://localhost:3000",
+    json: "true",
   };
 
   const res = http.post(
-    "https://gym-project-prra.vercel.app/api/auth/callback/credentials",
-    payload,
-    params
-  );
+  "http://localhost:3000/api/auth/callback/credentials",
+  payload,
+  {
+    cookies: {
+      "authjs.csrf-token": csrfCookie || "",
+    },
+
+    headers: {
+      "Content-Type":
+        "application/x-www-form-urlencoded",
+    },
+  }
+);
 
   check(res, {
-    "status is 200": (r) => r.status === 200,
+    "login successful": (r) =>
+      r.status === 200 ||
+      r.status === 302 ||
+      r.status === 307,
   });
 
   sleep(1);

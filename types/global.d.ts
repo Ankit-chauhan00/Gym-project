@@ -43,3 +43,8 @@ type SerializedProduct = Omit<Product, "price"> & {
   price: number;
 };
 type TrainerWithUser = Trainer & { user: { image: string | null; name: string | null } };
+
+interface RouteParams {
+  params: Promise<Record<string, string>>;
+  searchParams: Promise<Record<string, string>>;
+}

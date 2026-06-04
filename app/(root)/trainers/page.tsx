@@ -4,9 +4,11 @@ import CommonFilters from "@/components/filters/CommonFilters";
 import Pagination from "@/components/Pagination";
 import LoaclSearch from "@/components/search/LoaclSearch";
 import { DeleteUserFilters } from "@/constants/filter";
+import ROUTES from "@/constants/routes";
 import { DEFAULT_EMPTY } from "@/constants/states";
 import { getSavedTrainers } from "@/lib/actions/user.action";
 import { TrainerWithUser } from "@/types/global";
+import Link from "next/link";
 
 interface SearchParams {
   searchParams: Promise<{ [key: string]: string }>;
@@ -17,7 +19,7 @@ const Trainers = async ({ searchParams }: SearchParams) => {
 
   const { success, data, error } = await getSavedTrainers({
     page: Number(page) || 1,
-    pageSize: Number(pageSize) || 21,
+    pageSize: Number(pageSize) || 6,
     query: query || "",
     filter: filter || "",
   });
@@ -42,7 +44,12 @@ const Trainers = async ({ searchParams }: SearchParams) => {
             otherClasses="w-full  border-1 border-white mt-5"
             route="/trainers"
             imgSrc="/icons/search.svg"
-            placeholder="Search your favourate Trainer"
+            placeholder="Search your favourate Trainer with their specialization ex:- yoga, cardio, powerlifting crossfit..." 
+              // "Yoga"
+              // "Cardio",
+              // "Powerlifting",
+              // "Crossfit",
+              // "Calisthenics","
             iconPosition="left"
           />
 
@@ -61,15 +68,15 @@ const Trainers = async ({ searchParams }: SearchParams) => {
             render={(trainers: TrainerWithUser[]) => (
               <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
                 {trainers.map((trainer) => (
+                  <Link key={trainer.id} href={ROUTES.TRAINER(trainer.id)}>
                   <TrainerCard
-                    key={trainer.id}
                     data={{
                       ...trainer,
                       image: trainer.user?.image || "",
                       name: trainer.user?.name || "Unknown Trainer",
                     }}
-                    variant="full"
                   />
+                  </Link>
                 ))}
               </div>
             )}

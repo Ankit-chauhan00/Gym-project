@@ -39,7 +39,7 @@ const MembershipCard = ({
 
       {/* Image */}
       <div className="relative h-40 overflow-hidden rounded-xl sm:h-48">
-        <Image src={image || "/images/default-gym.jpg"} alt={name} fill className="object-cover" />
+        <Image src={image || "/images/hero-home.png"} alt={name} fill className="object-cover" />
 
         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
       </div>

@@ -89,9 +89,6 @@ const TrainerCard = ({
         
         {/* Email */}
         <div className="rounded-2xl bg-zinc-100 p-4 dark:bg-zinc-900">
-          <p className="text-xs font-semibold tracking-[0.2em] text-zinc-500 uppercase">
-            Contact
-          </p>
 
           <p className="mt-2 truncate text-sm font-medium text-zinc-800 dark:text-zinc-200">
             {email}
@@ -126,9 +123,10 @@ const TrainerCard = ({
         </div>
 
         {/* CTA */}
-        <button className="mt-6 w-full rounded-2xl bg-red-600 py-4 text-sm font-bold uppercase tracking-wide text-white transition hover:bg-red-700">
+ 
+        { isFull &&  <button className="mt-6 w-full rounded-2xl bg-red-600 py-4 text-sm font-bold uppercase tracking-wide text-white transition hover:bg-red-700">
           Book Session
-        </button>
+        </button>}
       </div>
     </div>
   );

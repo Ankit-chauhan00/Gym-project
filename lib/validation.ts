@@ -98,4 +98,8 @@ export const productCreationSchema = z.object({
   modelUrl : z.string().optional(),
 })
 
+export const GetTrainerByIdSchema = z.object({
+  trainerId: z.string().min(1, {message: "Id is required"}),
+})
+
 
