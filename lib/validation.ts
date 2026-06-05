@@ -139,5 +139,18 @@ export const productCreationActionSchema = z.object({
 });
 
 export const GetTrainerByIdSchema = z.object({
-  trainerId: z.string().min(1, { message: "Id is required" }),
+  trainerId: z.string().min(1, { message: "Trainer Id is required" }),
 });
+
+export const GetProductByIdSchema = z.object({
+  productId: z.string().min(1, {message: "Product Id is required"}),
+})
+
+export const GetFilteredProductsSchema = z.object({
+  page: z.number().int().optional(),
+  pageSize: z.number().int().optional(),
+  query: z.string().optional(),
+  filter: z.string().optional(),
+  category: z.string().optional(),
+  productType: z.string().optional(),
+})

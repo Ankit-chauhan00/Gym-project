@@ -28,7 +28,7 @@ export async function getSavedTrainers(
   const cachedData = await redis.get(cacheKey);
 
   if (cachedData) {
-    console.log("CACHE HIT")
+    console.log("CACHE TRAINER HIT")
     return JSON.parse(cachedData) as ActionResponse<{
       trainers: Trainer[];
       isNext: boolean;

@@ -11,7 +11,7 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "ik.imagekit.io",
       },
-      
+
       {
         protocol: "https",
         hostname: "cdn.jsdelivr.net",
@@ -25,9 +25,10 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "images.unsplash.com",
       },
-
-      
-      
+      {
+        protocol: "https",
+        hostname: "picsum.photos",
+      },
     ],
   },
 };

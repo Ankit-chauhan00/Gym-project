@@ -1,4 +1,5 @@
-import { User } from "@/generated/prisma/client";
+
+import { Product, User } from "@prisma/client";
 
 interface SignInWithAuthParams {
   provider: "github" | "google";
@@ -86,4 +87,21 @@ interface CreateProductParams {
 
 interface GetTrainerParams {
   trainerId: string;
+}
+
+type ProductWithImages = Product & {
+  images: string[];
+};
+
+type ProductWithSingleImage = Product & {
+  images: string
+}
+
+interface GetFilteredProducts {
+  page?: number;
+  pageSize?: number;
+  query?: string;
+  filter?: string;
+  category?: string;
+  productType?: string;
 }

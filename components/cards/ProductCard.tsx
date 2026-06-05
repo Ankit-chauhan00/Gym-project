@@ -1,45 +1,45 @@
+import { Category,  ProductType } from "@prisma/client";
+import { Decimal } from "@prisma/client/runtime/client";
 import Image from "next/image";
 import React from "react";
 
-const ProductCard = () => {
+interface ProductImage {
+  imageUrl: string;
+}
+
+interface ProductCardProps {
+  data: {
+    id: string;
+    title: string;
+    price: Decimal;
+    stock: number;
+    category: Category | null;
+    productType: ProductType | null;
+    images: ProductImage[];
+  };
+}
+
+const ProductCard = ({ data: { title, price, category, images } }: ProductCardProps) => {
+  const imageUrl = images?.[0]?.imageUrl || "/placeholder.png";
+
   return (
-    <div className="group overflow-hidden rounded-2xl border bg-white shadow-sm transition hover:shadow-md">
-      
+    <div className="group flex w-[320px] flex-col overflow-hidden rounded-2xl border bg-white shadow-sm transition hover:shadow-md">
       {/* Image Section */}
-      <div className="relative aspect-square overflow-hidden bg-gray-100">
-        <Image
-        fill
-          src="/images/hero-home.png"
-          alt="Product"
-        />
+      <div className="relative h-[320px] w-full overflow-hidden bg-gray-100">
+        <Image fill src={imageUrl} alt={title} className="object-cover transition duration-300 group-hover:scale-105" />
       </div>
 
       {/* Content Section */}
-      <div className="space-y-3 p-4">
-        
-        {/* Category */}
-        <p className="text-sm text-gray-500">
-          Fitness Equipment
-        </p>
+      <div className="flex flex-1 flex-col justify-between space-y-3 p-4">
+        <div className="space-y-2">
+          <p className="text-sm text-gray-500">{category}</p>
 
-        {/* Product Name */}
-        <h3 className="line-clamp-2 text-lg font-semibold text-gray-900">
-          Premium Adjustable Dumbbells
-        </h3>
+          <h3 className="line-clamp-2 text-lg font-semibold text-gray-900">{title}</h3>
 
-        {/* Price + Rating */}
-        <div className="flex items-center justify-between">
-          <p className="text-xl font-bold text-black">
-            ₹4,999
-          </p>
-
-          <div className="flex items-center gap-1 text-sm text-yellow-500">
-            ⭐ 4.8
-          </div>
+          <p className="text-xl font-bold text-black">₹{Number(price).toFixed(2)}</p>
         </div>
 
-        {/* Button */}
-        <button className="w-full rounded-xl bg-black py-3 text-sm font-medium text-white transition hover:bg-gray-800">
+        <button className="mt-auto w-full rounded-xl bg-black py-3 text-sm font-medium text-white transition hover:bg-gray-800">
           Add to Cart
         </button>
       </div>

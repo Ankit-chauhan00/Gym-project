@@ -1,4 +1,5 @@
 import ProductCard from "@/components/cards/ProductCard";
+import DataRenderer from "@/components/DataRenderer";
 import ClearFilters from "@/components/filters/ClearFilters";
 import CommonFilters from "@/components/filters/CommonFilters";
 import PriceFilter from "@/components/filters/PriceFilter";
@@ -7,8 +8,48 @@ import LoaclSearch from "@/components/search/LoaclSearch";
 import ProductsideBar from "@/components/sidebars/ProductsideBar";
 
 import { ProductCategoryFilters, ProductPageFilters, ProductTypeFilters } from "@/constants/filter";
+import { DEFAULT_EMPTY } from "@/constants/states";
+import { getFilteredProducts } from "@/lib/actions/product.action";
+import { Category, ProductType } from "@prisma/client";
+import { Decimal } from "@prisma/client/runtime/client";
 
-const ProductSections = () => {
+import Link from "next/link";
+
+interface SearchParams {
+  searchParams: Promise<Record<string, string | undefined>>;
+}
+
+export interface ProductWithSingleImageProps {
+  id: string;
+  title: string;
+  price: Decimal;
+  stock: number;
+  category: Category | null;
+  productType: ProductType | null;
+  images: {
+    imageUrl: string;
+  }[];
+}
+
+const ProductSections = async ({ searchParams }: SearchParams) => {
+  const params = await searchParams;
+
+  const { page, pageSize, query, filter, category } = await params;
+
+  const productType = params["product-type"];
+
+  const { success, data, error } = await getFilteredProducts({
+    page: Number(page) || 1,
+    pageSize: Number(pageSize) || 8,
+    query: query || "",
+    filter: filter || "",
+    category: category || "",
+    productType: productType || "",
+  });
+
+  const products = data?.products || [];
+  const isNext = data?.isNext || false;
+
   return (
     <section className="min-h-screen w-full bg-white py-20 text-slate-950 transition-colors duration-300 dark:bg-black dark:text-white">
       <div className="flex min-h-full flex-col gap-12 px-4 sm:px-6 lg:px-8">
@@ -73,20 +114,28 @@ const ProductSections = () => {
           </div>
         </header>
 
-        <div className="flex justify-evenly">
-          <aside className="rounded-md border w-1/3 hidden sm:block border-slate-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-950/95">
-            <ProductsideBar />
-          </aside>
-          <div className="flex flex-col">
-            <div className="flex flex-wrap gap-3 justify-center items-center">
-              <ProductCard/>
-            <ProductCard/><ProductCard/><ProductCard/><ProductCard/><ProductCard/><ProductCard/><ProductCard/>
-            </div>
-
-            <Pagination isNext={false} page={1}/>
+          <div className="flex flex-wrap justify-between  gap-3">
+            <DataRenderer
+              success={success}
+              error={error}
+              data={products}
+              empty={DEFAULT_EMPTY}
+              render={(products: ProductWithSingleImageProps[]) => (
+                <div className="flex flex-wrap items-center justify-center gap-5">
+                  {products.map((product) => (
+                    <Link key={product.id} href={`/products/${product.id}`}>
+                      <ProductCard data={product} />
+                    </Link>
+                  ))}
+                </div>
+              )}
+            />
+            <Pagination isNext={isNext} page={page} />
           </div>
+
+
         </div>
-      </div>
+
     </section>
   );
 };
