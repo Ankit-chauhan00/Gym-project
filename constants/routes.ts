@@ -5,6 +5,7 @@ const ROUTES = {
     SIGN_IN_WITH_OAUTH: `signin-with-oAuth`,
 
     TRAINER: (id: string) => `/trainers/${id}`,
+    PRODUCT: (id: string) => `/products/${id}`,
 
     ADMIN_DELET_USER:"/admin/delete-users"
 

@@ -7,6 +7,7 @@ import Pagination from "@/components/Pagination";
 import LoaclSearch from "@/components/search/LoaclSearch";
 
 import { ProductCategoryFilters, ProductPageFilters, ProductTypeFilters } from "@/constants/filter";
+import ROUTES from "@/constants/routes";
 import { DEFAULT_EMPTY } from "@/constants/states";
 import { getFilteredProducts } from "@/lib/actions/product.action";
 import { ProductWithSingleImageProps } from "@/types/global";
@@ -112,7 +113,7 @@ const ProductSections = async ({ searchParams }: SearchParams) => {
             render={(products: ProductWithSingleImageProps[]) => (
               <div className="flex flex-wrap items-center justify-center gap-5">
                 {products.map((product) => (
-                  <Link key={product.id} href={`/products/${product.id}`}>
+                  <Link key={product.id} href={ROUTES.PRODUCT(product.id)}>
                     <ProductCard data={product} />
                   </Link>
                 ))}

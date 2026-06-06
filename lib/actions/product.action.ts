@@ -1,8 +1,19 @@
 "use server";
 
-import { ActionResponse, CreateProductParams, GetFilteredProducts, ProductWithImages } from "@/types/action";
+import {
+  ActionResponse,
+  AddToCartParams,
+  CreateProductParams,
+  GetFilteredProducts,
+  ProductWithImages,
+} from "@/types/action";
 import action from "../handlers/actions";
-import { GetFilteredProductsSchema, GetProductByIdSchema, productCreationActionSchema } from "../validation";
+import {
+  AddToCartSchema,
+  GetFilteredProductsSchema,
+  GetProductByIdSchema,
+  productCreationActionSchema,
+} from "../validation";
 import { auth } from "@/auth";
 import handleError from "../handlers/error";
 import { ErrorResponse, SerializedProduct } from "@/types/global";
@@ -10,6 +21,7 @@ import prisma from "../prisma";
 import { searilizeProduct } from "@/constants/helper";
 import { Category, Prisma, ProductType } from "@prisma/client";
 import { redis } from "../redis";
+import { success } from "zod";
 
 interface ProductionCreationServerAction extends CreateProductParams {
   images?: string[];
@@ -147,7 +159,7 @@ export async function GetProduct(params: GetProductById): Promise<ActionResponse
     };
 
     // STORE IN REDIS
-    await redis.set(cacheKey, JSON.stringify(flatternProduct), "EX", 60 * 60)
+    await redis.set(cacheKey, JSON.stringify(flatternProduct), "EX", 60 * 60);
 
     return { success: true, data: flatternProduct };
   } catch (error) {
@@ -284,6 +296,72 @@ export async function getFilteredProducts(
     await redis.set(cacheKey, JSON.stringify(response), "EX", 180);
 
     return response;
+  } catch (error) {
+    return handleError(error) as ErrorResponse;
+  }
+}
+
+export async function AddProductToCart(params: AddToCartParams): Promise<ActionResponse> {
+  const validationResult = await action({
+    params,
+    schema: AddToCartSchema,
+    authorize: true,
+  });
+
+  if (validationResult instanceof Error) return handleError(validationResult) as ErrorResponse;
+
+  const userId = validationResult.session?.user.id;
+
+  if (!userId) throw new Error("Need To be LoggedIn or Signed up");
+
+  const { productId } = validationResult.params!;
+
+  try {
+    const result = await prisma.$transaction(async (tx) => {
+      let cart = await tx.cart.findFirst({
+        where: {
+          userId,
+          cartType: "BOOKMARK",
+        },
+      });
+
+      if (!cart) {
+        cart = await tx.cart.create({
+          data: {
+            userId,
+            cartType: "BOOKMARK",
+          },
+        });
+      }
+
+      const existingItem = await tx.cartItem.findFirst({
+        where: {
+          cartId: cart.id,
+          productId,
+        },
+      });
+
+      if (existingItem) {
+        return {
+          success: true,
+          message: "Alredy in Cart",
+        };
+      }
+
+      if (!existingItem) {
+        await tx.cartItem.create({
+          data: {
+            cartId: cart.id,
+            productId,
+          },
+        });
+      }
+
+      return {success: true, message: "Added to Cart"}
+    });
+
+    return result;
+    
   } catch (error) {
     return handleError(error) as ErrorResponse;
   }

@@ -27,6 +27,7 @@ model User {
 
   trainerConnections TrainerClient[]
 
+  cart         Cart[]
   // Timestamps
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt

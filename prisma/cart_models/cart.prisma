@@ -1,0 +1,23 @@
+enum CartType {
+    LIVE
+    BOOKMARK
+    SAVE_FOR_LATER
+}
+
+model Cart {
+    id        String    @id @default(cuid())
+    cartType  CartType  @default(BOOKMARK)
+
+    userId   String 
+    user     User       @relation(fields : [userId], references: [id], onDelete: Cascade)
+
+    createdAt DateTime  @default(now())
+    updatedAt DateTime @updatedAt
+
+
+    // relation 
+    cartItem    CartItem[]
+
+    @@unique([userId, cartType])
+}
+

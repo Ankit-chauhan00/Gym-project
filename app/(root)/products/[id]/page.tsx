@@ -1,13 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { QuantitySelector } from "@/components/ui/QuantitySelector";
 
-import { BadgeCheck, ShieldCheck, Truck} from "lucide-react";
+import { BadgeCheck, ShieldCheck, Truck } from "lucide-react";
 
-import { FiShoppingCart } from "react-icons/fi";
 import { TbHexagon3D } from "react-icons/tb";
 
 import { GetProduct } from "@/lib/actions/product.action";
 import ProductImageGallery from "@/components/product/ProductImageGallery";
+import AddToCart from "@/components/cart/AddToCart";
 
 interface ProductDetailsParams {
   params: { id: string };
@@ -25,9 +25,7 @@ const ProductDetails = async ({ params }: ProductDetailsParams) => {
     );
   }
 
-  const { title, description, price, stock, modelUrl,  images, category,  } = product!;
-
-  console.log(modelUrl);
+  const { title, description, price, stock, modelUrl, images, category } = product!;
 
   return (
     <section className="w-full px-4 py-10 pt-20 md:px-8 lg:px-16">
@@ -105,12 +103,7 @@ const ProductDetails = async ({ params }: ProductDetailsParams) => {
 
           {/* actions */}
           <div className="mt-6 flex flex-col gap-4 sm:flex-row">
-            <Button className="h-12 flex-1 rounded-md bg-red-600 text-white hover:bg-red-700">
-              <div className="flex items-center gap-2">
-                <FiShoppingCart size={20} />
-                <span className="font-semibold">Add To Cart</span>
-              </div>
-            </Button>
+            <AddToCart productId={id} />
 
             <Button variant="outline" className="h-12 flex-1 rounded-md border-zinc-300 dark:border-zinc-700">
               Buy Now
@@ -128,9 +121,11 @@ const ProductDetails = async ({ params }: ProductDetailsParams) => {
                 Product Type :<span className="ml-2 font-medium text-black dark:text-white">{product.productType}</span>
               </p>
 
-              {modelUrl && <Button className="">
-                <TbHexagon3D size={22} /> 3D View
-              </Button>}
+              {modelUrl && (
+                <Button className="">
+                  <TbHexagon3D size={22} /> 3D View
+                </Button>
+              )}
             </div>
           </div>
         </div>

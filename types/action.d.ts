@@ -1,4 +1,3 @@
-
 import { Product, User } from "@prisma/client";
 
 interface SignInWithAuthParams {
@@ -15,7 +14,11 @@ interface SignInWithAuthParams {
 type SafeUser = Omit<User, "password">;
 interface ActionResponse<T = null> {
   success: boolean;
+
   data?: T;
+
+  message?: string;
+
   error?: {
     message: string;
     details?: Record<string, string[]>;
@@ -94,8 +97,8 @@ type ProductWithImages = Product & {
 };
 
 type ProductWithSingleImage = Product & {
-  images: string
-}
+  images: string;
+};
 
 interface GetFilteredProducts {
   page?: number;
@@ -104,4 +107,8 @@ interface GetFilteredProducts {
   filter?: string;
   category?: string;
   productType?: string;
+}
+
+interface AddToCartParams {
+  productId: string;
 }

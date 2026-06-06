@@ -154,3 +154,7 @@ export const GetFilteredProductsSchema = z.object({
   category: z.string().optional(),
   productType: z.string().optional(),
 })
+
+export const AddToCartSchema = z.object({
+  productId: z.string().min(1,{message: "Product Id is Required"})
+})
