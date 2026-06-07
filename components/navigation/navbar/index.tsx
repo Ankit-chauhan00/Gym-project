@@ -5,44 +5,48 @@ import Link from "next/link";
 import Theme from "./Theme";
 import { Button } from "@/components/ui/button";
 import { useSession, signOut } from "next-auth/react";
+import UserAvatar from "@/components/UserAvtar";
+import ROUTES from "@/constants/routes";
 
 const NavBar = () => {
   const { data: session } = useSession();
 
   const userId = session?.user?.id;
-  const isAdmin = session?.user?.role === "ADMIN"
 
   return (
     <nav className="flex-between shadow-light-200 fixed z-50 w-full bg-[#944242] p-1 sm:px-12 dark:bg-[#1D1F23] dark:shadow-none">
       <Link href="/" className="flex items-center">
-        <Image
-          src="/images/main_logo.png"
-          width={53}
-          height={53}
-          alt="logo"
-          aria-label="nav logo"
-        />
+        <Image src="/images/main_logo.png" width={53} height={53} alt="logo" aria-label="nav logo" />
 
         <p className="font-frans text-2xl font-bold tracking-wide text-white dark:text-[#ffffff]">
           Gym
-          <span className="font-extrabold text-[#CE1919] underline">
-            Fit
-          </span>
+          <span className="font-extrabold text-[#CE1919] underline">Fit</span>
         </p>
       </Link>
 
-      <div className="font-iceland flex flex-between gap-10 text-2xl text-white ">
+      <div className="font-iceland flex-between flex gap-10 text-2xl text-white">
         <Link href="/">Home</Link>
         <Link href="/memberships">Memberships</Link>
         <Link href="/trainers">Trainers</Link>
         <Link href="/products">Products</Link>
-        {isAdmin && <Link href="/admin">Admin Panel</Link>}
+    
       </div>
 
       <div className="flex-between gap-2">
-        <div className="pr-5">
+        {userId && (
+          <Link href={ROUTES.USER_PROFILE(userId)}>
+          <UserAvatar
+            name={session.user.name || ""}
+            id={userId}
+            classname="size-11"
+            fallbackClassName="cursor-pointer "
+            imageUrl={session.user.image || "/images/default-user.jpg"}
+          />
+          </Link>
+        )}
+
+       
           <Theme />
-        </div>
 
         {userId ? (
           <Button

@@ -47,7 +47,7 @@ const LoaclSearch = ({ route, imgSrc, placeholder, otherClasses, iconPosition = 
           router.push(newUrl, { scroll: false });
         }
       }
-    }, 300);
+    }, 500);
 
     return () => clearTimeout(delayDebounceFn);
   }, [searchQuery, router, route, searchParams, pathname]);

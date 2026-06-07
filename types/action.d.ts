@@ -1,4 +1,5 @@
 import { Product, User } from "@prisma/client";
+import { PaginatedSearchParams } from "./global";
 
 interface SignInWithAuthParams {
   provider: "github" | "google";
@@ -92,9 +93,7 @@ interface GetTrainerParams {
   trainerId: string;
 }
 
-type ProductWithImages = Product & {
-  images: string[];
-};
+
 
 type ProductWithSingleImage = Product & {
   images: string;
@@ -112,3 +111,13 @@ interface GetFilteredProducts {
 interface AddToCartParams {
   productId: string;
 }
+
+interface GetCartItemsParams extends PaginatedSearchParams {
+  userId: string;
+}
+
+type ProductWithImages = Prisma.ProductGetPayload<{
+  include: {
+    images: true;
+  };
+}>;

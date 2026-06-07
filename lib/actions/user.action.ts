@@ -1,13 +1,14 @@
 "use server";
 
-import { ActionResponse, GetTrainerParams } from "@/types/action";
+import { ActionResponse, GetCartItemsParams, GetTrainerParams, ProductWithImages } from "@/types/action";
 import { ErrorResponse, PaginatedSearchParams, TrainerWithUser } from "@/types/global";
-import { Trainer } from "@prisma/client";
+import { Product, Trainer, User } from "@prisma/client";
 import action from "../handlers/actions";
-import { GetTrainerByIdSchema, PaginatedSearchParamsSchema } from "../validation";
+import { GetCartItemsSchema, GetTrainerByIdSchema, PaginatedSearchParamsSchema } from "../validation";
 import handleError from "../handlers/error";
 import prisma from "../prisma";
 import { redis } from "@/lib/redis";
+import { auth } from "@/auth";
 
 export async function getSavedTrainers(
   params: PaginatedSearchParams
@@ -19,8 +20,6 @@ export async function getSavedTrainers(
 
   if (validationResult instanceof Error) return handleError(validationResult) as ErrorResponse;
 
-  if (validationResult instanceof Error) return handleError(validationResult) as ErrorResponse;
-
   const { page = 1, pageSize = 1, query, filter } = validationResult.params!;
 
   const cacheKey = `trainers:${page}:${pageSize}:${query || ""}:${filter || ""}`;
@@ -28,14 +27,14 @@ export async function getSavedTrainers(
   const cachedData = await redis.get(cacheKey);
 
   if (cachedData) {
-    console.log("CACHE TRAINER HIT")
+    console.log("CACHE TRAINER HIT");
     return JSON.parse(cachedData) as ActionResponse<{
       trainers: Trainer[];
       isNext: boolean;
     }>;
   }
 
-  console.log("CACHE MISS")
+  console.log("CACHE MISS");
 
   const where = {
     ...(query && {
@@ -92,6 +91,7 @@ export async function getSavedTrainers(
           },
         },
       }),
+
       prisma.trainer.count({
         where,
       }),
@@ -156,6 +156,95 @@ export async function getTrainerById(params: GetTrainerParams): Promise<ActionRe
     return {
       success: true,
       data: flattenedTrainer,
+    };
+  } catch (error) {
+    return handleError(error) as ErrorResponse;
+  }
+}
+
+export async function getUser(): Promise<ActionResponse<User>> {
+  const session = await auth();
+
+  if (!session?.user.id) throw new Error("Unauthorized");
+  try {
+    const existingUser = await prisma.user.findUnique({
+      where: {
+        id: session.user.id,
+      },
+    });
+
+    if (!existingUser) throw new Error("User not Find");
+
+    return { success: true, data: existingUser };
+  } catch (error) {
+    return handleError(error) as ErrorResponse;
+  }
+}
+
+export async function getCartItems(
+  params: GetCartItemsParams
+): Promise<ActionResponse<{ productsWithImages: ProductWithImages[]; isNext: boolean }>> {
+  const session = await auth();
+
+  if (!session?.user.id) {
+    throw new Error("Need to Login");
+  }
+
+  const { userId } = await params!;
+
+  if (session.user.id !== userId) {
+    throw new Error("Unauthorized");
+  }
+
+  const validationResult = await action({
+    params,
+    schema: GetCartItemsSchema,
+    authorize: true,
+  });
+
+  if (validationResult instanceof Error) return handleError(validationResult) as ErrorResponse;
+
+  const { page = 1, pageSize = 8 } = validationResult.params!;
+
+  const skip = (page - 1) * pageSize;
+
+  try {
+    const userCart = await prisma.cart.findUnique({
+      where: {
+        userId_cartType: {
+          userId,
+          cartType: "BOOKMARK",
+        },
+      },
+
+      include: {
+        cartItem: {
+          skip,
+          take: pageSize,
+          include: {
+          product:{
+            include:{
+              images: true,
+            }
+          }
+          },
+        },
+      },
+    });
+
+    const cartItems = userCart?.cartItem || [];
+
+    const isNext = cartItems.length > pageSize;
+
+    const products = cartItems.slice(0, pageSize).map((item) => item.product);
+
+    
+    return {
+      success: true,
+      data: {
+        productsWithImages: products,
+        isNext,
+      },
     };
   } catch (error) {
     return handleError(error) as ErrorResponse;

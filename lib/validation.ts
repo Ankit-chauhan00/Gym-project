@@ -158,3 +158,8 @@ export const GetFilteredProductsSchema = z.object({
 export const AddToCartSchema = z.object({
   productId: z.string().min(1,{message: "Product Id is Required"})
 })
+
+export const GetCartItemsSchema  = PaginatedSearchParamsSchema.extend ({
+  userId: z.string().min(1, {message: "User Id needed"}),
+})
+
