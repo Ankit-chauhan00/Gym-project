@@ -1,0 +1,64 @@
+enum PaymentMode {
+    PREPAID
+    COD
+}
+
+enum OrderStatus {
+    PENDING
+    ASSIGNED
+    OUT_FOR_DELIVERY
+    DELIVERED
+    CANCELLED
+}
+
+
+model Order {
+    id   String   @id    @default(cuid())
+    userId String
+    user User  @relation(fields: [userId], references: [id])
+
+    productId String
+    product   Product  @relation(fields:[productId], references: [id])
+    // snapshot fields
+    productName  String
+    productPrice Float
+    productImage String?
+
+    quantity Int
+    orderStatus OrderStatus @default(PENDING)
+
+    totalAmount Float
+
+    paymentMode  PaymentMode
+
+    // Snapshot Address Data
+  fullName    String
+  phoneNumber String
+
+  addressLine1 String
+  addressLine2 String?
+  city         String
+  state        String
+  postalCode   String
+  country      String
+
+  // Delivery Partner
+  assignedToId String?
+  assignedTo   User? @relation("AssignedOrders",fields: [assignedToId], references: [id])
+
+   // OTP
+  deliveryOtpHash        String?
+  deliveryOtpExpiry  DateTime?
+
+  // Relations
+  payment Payment?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+@@index([userId])
+@@index([orderStatus])
+@@index([assignedToId])
+@@index([paymentMode])
+@@index([createdAt])
+}

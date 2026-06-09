@@ -37,6 +37,7 @@ model Product {
     // relations
     images      ProductImages[]
     cartItems   CartItem[]
+    orders      Order[]
 
     createdAt      DateTime    @default(now())
     updatedAt      DateTime    @updatedAt

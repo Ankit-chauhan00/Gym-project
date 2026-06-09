@@ -2,6 +2,8 @@ enum Role {
   USER
   ADMIN
   TRAINER
+  DELIVERY_PARTNER
+  DELIVERY_AGENT
 }
 
 model User {
@@ -22,6 +24,10 @@ model User {
   // Relations
   accounts     Account[]
   products     Product[]
+  orders       Order[]
+
+  assignedDeliveries    Order[] @relation("AssignedOrders")
+  collectedPayments   Payment[] @relation("CollectedPayments")
 
   trainerProfile Trainer?
 

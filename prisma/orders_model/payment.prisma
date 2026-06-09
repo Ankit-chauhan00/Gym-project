@@ -1,0 +1,42 @@
+enum PaymentStatus {
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+
+enum PaymentMethod {
+  RAZORPAY
+  CASH
+  QR
+}
+
+model Payment {
+    id String @id @default(cuid())
+
+    orderId String @unique
+    order   Order @relation(fields: [orderId], references: [id])
+
+    amount Float
+
+    paymentMethod PaymentMethod
+    status        PaymentStatus  @default(PROCESSING)
+
+    transactionId String?
+
+
+    // delivery partner who collected money
+  collectedById String?
+  collectedBy   User? @relation("CollectedPayments",fields: [collectedById],references: [id])
+
+  // proof for qr/cash delivery
+  imageProof String?
+
+  paidAt DateTime? 
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status])
+  @@index([collectedById])
+}
