@@ -2,6 +2,7 @@ enum PaymentStatus {
   PROCESSING
   COMPLETED
   FAILED
+  REFUNDED
 }
 
 
@@ -17,12 +18,13 @@ model Payment {
     orderId String @unique
     order   Order @relation(fields: [orderId], references: [id])
 
-    amount Float
+    amount Int
 
     paymentMethod PaymentMethod
     status        PaymentStatus  @default(PROCESSING)
 
-    transactionId String?
+    transactionId String? @unique
+    razorPayOrderId String? @unique
 
 
     // delivery partner who collected money

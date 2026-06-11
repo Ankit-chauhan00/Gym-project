@@ -1,15 +1,11 @@
 import { Button } from "@/components/ui/button";
-import { QuantitySelector } from "@/components/ui/QuantitySelector";
-
 import { BadgeCheck, ShieldCheck, Truck } from "lucide-react";
-
 import { TbHexagon3D } from "react-icons/tb";
-
 import { GetProduct } from "@/lib/actions/product.action";
 import ProductImageGallery from "@/components/product/ProductImageGallery";
-import AddToCart from "@/components/cart/AddToCart";
 import Link from "next/link";
 import ROUTES from "@/constants/routes";
+import ProductIsland from "@/components/dynamicIslands/ProductIsland";
 
 interface ProductDetailsParams {
   params: { id: string };
@@ -98,19 +94,8 @@ const ProductDetails = async ({ params }: ProductDetailsParams) => {
             </div>
           </div>
 
-          {/* quantity */}
-          <div className="mt-10">
-            <QuantitySelector />
-          </div>
-
-          {/* actions */}
-          <div className="mt-6 flex flex-col gap-4 sm:flex-row">
-            <AddToCart productId={id} />
-
-            <Button variant="outline" className="h-12 flex-1 rounded-md border-zinc-300 dark:border-zinc-700">
-              Buy Now
-            </Button>
-          </div>
+          {/* Dynamic Product data bneed to be passed */}
+          <ProductIsland productId={id} stock={stock} price={price} />
 
           {/* extra */}
           <div className="mt-8 border-t border-zinc-200 pt-6 dark:border-zinc-800">

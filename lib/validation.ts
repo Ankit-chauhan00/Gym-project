@@ -143,8 +143,8 @@ export const GetTrainerByIdSchema = z.object({
 });
 
 export const GetProductByIdSchema = z.object({
-  productId: z.string().min(1, {message: "Product Id is required"}),
-})
+  productId: z.string().min(1, { message: "Product Id is required" }),
+});
 
 export const GetFilteredProductsSchema = z.object({
   page: z.number().int().optional(),
@@ -153,13 +153,40 @@ export const GetFilteredProductsSchema = z.object({
   filter: z.string().optional(),
   category: z.string().optional(),
   productType: z.string().optional(),
-})
+});
 
 export const AddToCartSchema = z.object({
-  productId: z.string().min(1,{message: "Product Id is Required"})
-})
+  productId: z.string().min(1, { message: "Product Id is Required" }),
+});
 
-export const GetCartItemsSchema  = PaginatedSearchParamsSchema.extend ({
-  userId: z.string().min(1, {message: "User Id needed"}),
-})
+export const GetCartItemsSchema = PaginatedSearchParamsSchema.extend({
+  userId: z.string().min(1, { message: "User Id needed" }),
+});
 
+export const createOrderSchema = z.object({
+  productId: z.string().min(1, { message: "product id is required" }),
+  quantity: z.number().int(),
+  totalAmount: z.number().positive(),
+
+  fullname: z.string().min(1, { message: "Full name is requires" }),
+  phoneNumber: z.string().min(1, { message: "Phone number is required" }),
+  addressLine1: z.string().min(1, { message: "Address is Required" }),
+  addressLine2: z.string().optional(),
+  city: z.string().min(1, { message: "City is Reqired" }),
+  state: z.string().min(1, { message: "State is Required" }),
+  postalCode: z.string().min(1, { message: "postal Code is required" }),
+  country: z.string().min(1, { message: "country is Required" }),
+  paymentMode: z.enum(["PREPAID", "COD"]),
+});
+
+export const createOrderFormSchema = z.object({
+  fullname: z.string().min(1, { message: "Full name is requires" }),
+  phoneNumber: z.string().min(1, { message: "Phone number is required" }),
+  addressLine1: z.string().min(1, { message: "Address is Required" }),
+  addressLine2: z.string().optional(),
+  city: z.string().min(1, { message: "City is Reqired" }),
+  state: z.string().min(1, { message: "State is Required" }),
+  postalCode: z.string().min(1, { message: "postal Code is required" }),
+  country: z.string().min(1, { message: "country is Required" }),
+  paymentMode: z.enum(["PREPAID", "COD"]),
+});

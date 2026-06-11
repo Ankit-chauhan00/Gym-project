@@ -9,8 +9,7 @@ import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
-import ROUTES from "@/constants/routes";
+import { ActionResponse } from "@/types/action";
 
 interface AuthFormProps<T extends FieldValues> {
   schema: z.ZodType<T>;
@@ -22,7 +21,8 @@ interface AuthFormProps<T extends FieldValues> {
 const AuthForm = <T extends FieldValues>({ schema, formType, onSubmit, defaultValues }: AuthFormProps<T>) => {
 
   const form = useForm<T>({
-    resolver: zodResolver(schema) as any,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    resolver: zodResolver(schema as any),
     defaultValues: defaultValues as DefaultValues<T>,
   });
 
@@ -34,6 +34,7 @@ const AuthForm = <T extends FieldValues>({ schema, formType, onSubmit, defaultVa
         description: formType === "SIGN_IN" ? "Signed in Successfully" : "Signed up Successfully",
       });
 
+      // eslint-disable-next-line react-hooks/immutability
       window.location.href = "/";
     } else {
       toast.error(result?.error?.message || `Error ${result?.status}`);
@@ -107,7 +108,7 @@ const AuthForm = <T extends FieldValues>({ schema, formType, onSubmit, defaultVa
         <Field>
           {formType === "SIGN_IN" ? (
             <p className="font-frans text-xs font-light text-gray-600 sm:text-sm dark:text-gray-400">
-              Don't have an account?{" "}
+              Dont have an account?{" "}
               <Link
                 href="/sign-up"
                 className="font-asap rounded bg-red-500 px-2 py-1 font-bold text-white transition-colors hover:bg-red-600"

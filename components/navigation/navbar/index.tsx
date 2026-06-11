@@ -18,13 +18,13 @@ const NavBar = () => {
       <Link href="/" className="flex items-center">
         <Image src="/images/main_logo.png" width={53} height={53} alt="logo" aria-label="nav logo" />
 
-        <p className="font-frans text-2xl font-bold tracking-wide text-white dark:text-[#ffffff]">
+        <p className="font-frans text-2xl hidden md:block font-bold tracking-wide text-white dark:text-[#ffffff]">
           Gym
           <span className="font-extrabold text-[#CE1919] underline">Fit</span>
         </p>
       </Link>
 
-      <div className="font-iceland flex-between flex gap-10 text-2xl text-white">
+      <div className="font-iceland hidden flex-between md:flex  gap-10 text-2xl text-white">
         <Link href="/">Home</Link>
         <Link href="/memberships">Memberships</Link>
         <Link href="/trainers">Trainers</Link>
@@ -38,7 +38,7 @@ const NavBar = () => {
           <UserAvatar
             name={session.user.name || ""}
             id={userId}
-            classname="size-11"
+            classname=" size-8 md:size-10" 
             fallbackClassName="cursor-pointer "
             imageUrl={session.user.image || "/images/default-user.jpg"}
           />
@@ -51,7 +51,7 @@ const NavBar = () => {
         {userId ? (
           <Button
             onClick={() => signOut({ callbackUrl: "/" })}
-            className="font-asap hidden h-[1.8rem] w-[5.5rem] border-[1px] border-white bg-transparent text-sm sm:flex dark:text-white"
+            className="font-asap hidden md:block h-[1.8rem] w-[5.5rem] border-[1px] border-white bg-transparent text-sm  dark:text-white"
           >
             Logout
           </Button>

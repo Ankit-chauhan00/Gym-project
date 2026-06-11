@@ -5,6 +5,7 @@ enum PaymentMode {
 
 enum OrderStatus {
     PENDING
+    PAID
     ASSIGNED
     OUT_FOR_DELIVERY
     DELIVERED
@@ -21,7 +22,7 @@ model Order {
     product   Product  @relation(fields:[productId], references: [id])
     // snapshot fields
     productName  String
-    productPrice Float
+    productPrice Int
     productImage String?
 
     quantity Int

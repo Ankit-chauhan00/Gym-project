@@ -7,6 +7,7 @@ const ROUTES = {
     TRAINER: (id: string) => `/trainers/${id}`,
     PRODUCT: (id: string) => `/products/${id}`,
     PRODUCT3D: (id: string)=> `/products/${id}/3d-section`,
+    PRODUCT_BUY_NOW:(id: string)=> `/products/${id}/buy-now`,
 
 
 

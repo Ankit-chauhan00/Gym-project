@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 import { auth } from "@/auth";
 import { Toaster } from "sonner";
 import { SessionProvider } from "next-auth/react";
-
+import Script from "next/script";
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -33,12 +33,11 @@ export const metadata = {
   description: "Live Healthy and make Environment Healthy",
 };
 
-export  default async function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
   const session = await auth();
   return (
     <html
@@ -57,8 +56,9 @@ export  default async function RootLayout({
       <body className="flex min-h-full flex-col">
         <SessionProvider session={session}>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+            <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="lazyOnload" />
             {children}
-            <Toaster/>
+            <Toaster />
           </ThemeProvider>
         </SessionProvider>
       </body>

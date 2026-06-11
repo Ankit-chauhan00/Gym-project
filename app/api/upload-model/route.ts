@@ -1,7 +1,5 @@
 import cloudinary from "@/lib/cloudinary";
-import handleError from "@/lib/handlers/error";
 import { UploadApiResponse } from "cloudinary";
-import { ErrorResponse } from "@/types/global";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {

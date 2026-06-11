@@ -23,7 +23,7 @@ model Product {
 
     title        String    
     description  String
-    price        Decimal
+    price        Int
     stock        Int
 
     category     Category?  

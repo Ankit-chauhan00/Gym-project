@@ -1,4 +1,4 @@
-import { Product, User } from "@prisma/client";
+import { OrderStatus, PaymentMode, Product, User } from "@prisma/client";
 import { PaginatedSearchParams } from "./global";
 
 interface SignInWithAuthParams {
@@ -93,8 +93,6 @@ interface GetTrainerParams {
   trainerId: string;
 }
 
-
-
 type ProductWithSingleImage = Product & {
   images: string;
 };
@@ -121,3 +119,24 @@ type ProductWithImages = Prisma.ProductGetPayload<{
     images: true;
   };
 }>;
+
+interface CreateOrderParams {
+  productId: string;
+
+  quantity: number;
+  totalAmount: number;
+
+  fullname: string;
+  phoneNumber: string;
+  addressLine1: string;
+  addressLine2?: string;
+
+  city: string;
+  state: string;
+  postalCode: string;
+  country: string;
+
+  orderStatus?: OrderStatus;
+  paymentMode: PaymentMode;
+  
+}
